@@ -7,6 +7,7 @@ logger = get_logger(__name__)
 class ElasticsearchConfig(BaseModel):
     service: Literal["elasticsearch"]
     project_name: str
+    st_seq: int
     es_source_index: str
     query: str
 

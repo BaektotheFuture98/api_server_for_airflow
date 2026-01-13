@@ -1,5 +1,5 @@
 from typing import Annotated, Union
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import Field
 from services.airflow_public_api import get_token, post_dags_trigger, gen_token
 from models.mysql_config import MySQLConfig
@@ -15,6 +15,24 @@ RequestSchema = Annotated[
     Union[MySQLConfig, ElasticsearchConfig], # MySQLConfig 또는 ElasticsearchConfig 중 하나
     Field(discriminator="service") # 'service' 필드를 기준으로 구분
 ]
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    body = await request.body()
+
+    logger.info(
+        f"[REQUEST] {request.method} {request.url.path} "
+        f"headers={dict(request.headers)} "
+        f"body={body.decode('utf-8', errors='ignore')}"
+    )
+
+    response = await call_next(request)
+
+    logger.info(
+        f"[RESPONSE] {request.method} {request.url.path} "
+        f"status_code={response.status_code}"
+    )
+    return response
 
 @app.post("/register")
 def register(schema: RequestSchema):

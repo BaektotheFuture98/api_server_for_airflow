@@ -5,6 +5,7 @@ from typing import Literal
 class MySQLConfig(BaseModel):
     service: Literal["mysql"]
     project_name: str
+    st_seq: int
     es_source_index: str = "lucy_main_v4_20240314"
     query: str
 
