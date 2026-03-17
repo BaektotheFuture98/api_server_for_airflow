@@ -16,10 +16,7 @@ FastAPI로 만든 간단한 API 서버입니다.
 ## Install
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install .
+uv sync
 ```
 
 ## Environment Variables
@@ -36,8 +33,10 @@ AIRFLOW_PASSWORD=admin
 ## Run
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+`pip install .`는 현재 패키징 설정상 바로 동작하지 않습니다.
 
 ## API
 
